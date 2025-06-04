@@ -17,7 +17,7 @@ See each package's own `README.md` for full documentation and usage examples.
 Import the desired package(s) in your Go project. For example, to use the logger:
 
 ```go
-import "github.com/yourusername/my-utils/logger"
+import "github.com/souvik-13/utils/<pkg-name>"
 ```
 
 ## Adding More Utilities
