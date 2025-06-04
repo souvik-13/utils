@@ -1,4 +1,4 @@
-# My Utils
+# Utils
 
 A collection of reusable utilities for Go projects. This repository is designed to provide modular, production-ready components that can be easily integrated into your Go applications.
 
