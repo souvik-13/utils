@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/souvik-13/my-utils/logger/v2"
+	"github.com/souvik-13/utils/logger/v2"
 )
 
 type Config struct {

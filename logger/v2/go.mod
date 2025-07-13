@@ -1,4 +1,4 @@
-module github.com/souvik-13/my-utils/logger/v2
+module github.com/souvik-13/utils/logger/v2
 
 go 1.24.1
 

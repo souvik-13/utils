@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/souvik-13/my-utils/logger/v2/example/logger"
+	"github.com/souvik-13/utils/logger/v2/example/logger"
 )
 
 func main() {

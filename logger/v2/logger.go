@@ -6,7 +6,7 @@ import (
 	"log/slog"
 
 	"github.com/m-mizutani/masq"
-	"github.com/souvik-13/my-utils/logger/v2/constants"
+	"github.com/souvik-13/utils/logger/v2/constants"
 )
 
 type contextKey struct{}

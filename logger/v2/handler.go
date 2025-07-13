@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/souvik-13/my-utils/logger/v2/zaphandler"
+	"github.com/souvik-13/utils/logger/v2/zaphandler"
 	"go.uber.org/zap/zapcore"
 )
 
