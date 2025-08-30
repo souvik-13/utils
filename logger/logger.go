@@ -3,10 +3,12 @@ package logger
 import (
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
+	"os"
 
 	"github.com/m-mizutani/masq"
-	"github.com/souvik-13/utils/logger/v2/constants"
+	"github.com/souvik-13/utils/logger/v3/constants"
 )
 
 type contextKey struct{}
@@ -28,6 +30,12 @@ type Config struct {
 	AddStackTraceAt slog.Level
 	CallerSkipCount int
 	MaskOptions     []masq.Option
+	Output          string
+
+	// unediteble fields
+
+	// output file or os.Stdout
+	output io.Writer
 }
 
 func New(opts ...Option) *Logger {
@@ -38,6 +46,8 @@ func New(opts ...Option) *Logger {
 		AddStackTraceAt: slog.LevelError,
 		CallerSkipCount: 1,
 		MaskOptions:     make([]masq.Option, 0, len(constants.PIIFieldKeys)),
+		Output:          "",
+		output:          os.Stdout,
 	}
 
 	for _, key := range constants.PIIFieldKeys {
@@ -48,6 +58,14 @@ func New(opts ...Option) *Logger {
 
 	for _, opt := range opts {
 		opt(cfg)
+	}
+
+	if cfg.Output != "" {
+		file, err := os.OpenFile(cfg.Output, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			panic(fmt.Sprintf("failed to open output file: %v", err)) // Or handle error appropriately
+		}
+		cfg.output = file
 	}
 
 	masqr := masq.New(
@@ -113,6 +131,12 @@ func WithMaskOptions(opts ...masq.Option) Option {
 	}
 }
 
+func WithOutfile(outfile string) Option {
+	return func(cfg *Config) {
+		cfg.Output = outfile
+	}
+}
+
 func ToContext(ctx context.Context, logger *Logger) context.Context {
 	return context.WithValue(ctx, LoggerCtxKey, logger)
 }
@@ -143,4 +167,19 @@ func (l *Logger) With(args ...any) *Logger {
 func (l *Logger) Clone() *Logger {
 	clone := *l
 	return &clone
+}
+
+func (l *Logger) WithOutputFile(file string) *Logger {
+	// Clone the logger and create a new handler with the new output file
+	clone := l.Clone()
+	if file != "" {
+		f, err := os.OpenFile(file, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		if err != nil {
+			panic(fmt.Sprintf("failed to open output file: %v", err)) // Or handle error appropriately
+		}
+		l.cfg.output = f
+	}
+	// Assuming newZapSlogHandler can be called again with new output
+	clone.Logger = slog.New(newZapSlogHandler(l.cfg, masq.New(l.cfg.MaskOptions...)))
+	return clone
 }

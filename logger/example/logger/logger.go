@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/souvik-13/utils/logger/v2"
+	"github.com/souvik-13/utils/logger/v3"
 )
 
 type Config struct {
@@ -24,6 +24,7 @@ func InitLogger(config Config) *logger.Logger {
 			logger.WithAddSource(true),
 			logger.WithAddStackTraceAt(slog.LevelDebug),
 			logger.WithCallerSkipCount(0),
+			logger.WithOutfile(""),
 		)
 	})
 

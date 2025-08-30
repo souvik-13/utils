@@ -2,9 +2,8 @@ package logger
 
 import (
 	"log/slog"
-	"os"
 
-	"github.com/souvik-13/utils/logger/v2/zaphandler"
+	"github.com/souvik-13/utils/logger/v3/zaphandler"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -31,7 +30,7 @@ func newZapSlogHandler(cfg *Config, masqr func(groups []string, a slog.Attr) slo
 			EncodeTime:    zapcore.ISO8601TimeEncoder,
 			EncodeCaller:  zapcore.ShortCallerEncoder,
 		}),
-		zapcore.AddSync(os.Stdout),
+		zapcore.AddSync(cfg.output),
 		level,
 	)
 
